@@ -150,6 +150,6 @@
     app.listen(PORT, () => {
         console.log(`Backend server running on port ${PORT}`);
         console.log(`Open your frontend service URL in your browser to access the app.`);
-        console.log("WARNING: Data stored in db.json will NOT persist across Cloud Run container restarts or scale-downs.");
+        console.log("WARNING: Data stored in db.json will nNOT persist across Cloud Run container restarts or scale-downs.");
     });
     
