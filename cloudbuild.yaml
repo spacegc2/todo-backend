@@ -1,15 +1,12 @@
 # backend/cloudbuild.yaml
 steps:
-# 1. Build the Docker image
+# 1. Build the Docker image and push to Container Registry
 - name: 'gcr.io/cloud-builders/docker'
+  id: 'build-and-push-backend' # Assign an ID to this step
   args: ['build', '-t', 'gcr.io/gen-lang-client-0960260048/todo-backend:$COMMIT_SHA', '.']
   dir: '.' # Ensure context is the backend directory
 
-# 2. Push the Docker image to Container Registry
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/gen-lang-client-0960260048/todo-backend:$COMMIT_SHA']
-
-# 3. Deploy the new image to Cloud Run
+# 2. Deploy the new image to Cloud Run
 - name: 'gcr.io/cloud-builders/gcloud'
   args:
   - 'run'
@@ -22,9 +19,9 @@ steps:
   - '--platform'
   - 'managed'
   - '--allow-unauthenticated'
-  # The backend does not need REACT_APP_BACKEND_URL as it serves as the API
-  waitFor: ['-'] # Wait for all previous steps
+  # The backend does not need REACT_APP_BACKEND_URL
+  waitFor: ['build-and-push-backend'] # Explicitly wait for the build-and-push step to complete
 images:
 - 'gcr.io/gen-lang-client-0960260048/todo-backend:$COMMIT_SHA'
-options: # Directs logs to Cloud Logging
-  logging: CLOUD_LOGGING_ONLY
+options: # Added to specify logging behavior
+  logging: CLOUD_LOGGING_ONLY # Directs logs to Cloud Logging
