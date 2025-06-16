@@ -22,9 +22,9 @@ steps:
   - '--platform'
   - 'managed'
   - '--allow-unauthenticated'
-  # The backend does not need REACT_APP_BACKEND_URL
+  # The backend does not need REACT_APP_BACKEND_URL as it serves as the API
   waitFor: ['-'] # Wait for all previous steps
 images:
 - 'gcr.io/gen-lang-client-0960260048/todo-backend:$COMMIT_SHA'
-options: # Added to specify logging behavior
-  logging: CLOUD_LOGGING_ONLY # Directs logs to Cloud Logging
+options: # Directs logs to Cloud Logging
+  logging: CLOUD_LOGGING_ONLY
