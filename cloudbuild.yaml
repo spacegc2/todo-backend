@@ -22,7 +22,9 @@ steps:
   - '--platform'
   - 'managed'
   - '--allow-unauthenticated'
-  - '--update-env-vars' # Added to update environment variables
+  # The backend does not need REACT_APP_BACKEND_URL
   waitFor: ['-'] # Wait for all previous steps
 images:
 - 'gcr.io/gen-lang-client-0960260048/todo-backend:$COMMIT_SHA'
+options: # Added to specify logging behavior
+  logging: CLOUD_LOGGING_ONLY # Directs logs to Cloud Logging
