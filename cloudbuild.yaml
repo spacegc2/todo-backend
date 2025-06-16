@@ -3,7 +3,8 @@ steps:
 # 1. Build the Docker image and push to Container Registry
 - name: 'gcr.io/cloud-builders/docker'
   id: 'build-and-push-backend' # Assign an ID to this step
-  args: ['build', '-t', 'gcr.io/gen-lang-client-0960260048/todo-backend:$COMMIT_SHA', '.']
+  # Use $_BUILD_ID for a reliable unique tag
+  args: ['build', '-t', 'gcr.io/gen-lang-client-0960260048/todo-backend:$_BUILD_ID', '.']
   dir: '.' # Ensure context is the backend directory
 
 # 2. Deploy the new image to Cloud Run
@@ -13,7 +14,7 @@ steps:
   - 'deploy'
   - 'todo-backend'
   - '--image'
-  - 'gcr.io/gen-lang-client-0960260048/todo-backend:$COMMIT_SHA'
+  - 'gcr.io/gen-lang-client-0960260048/todo-backend:$_BUILD_ID' # Use $_BUILD_ID for deployment
   - '--region'
   - 'us-central1' # Your specified region
   - '--platform'
@@ -22,6 +23,6 @@ steps:
   # The backend does not need REACT_APP_BACKEND_URL
   waitFor: ['build-and-push-backend'] # Explicitly wait for the build-and-push step to complete
 images:
-- 'gcr.io/gen-lang-client-0960260048/todo-backend:$COMMIT_SHA'
+- 'gcr.io/gen-lang-client-0960260048/todo-backend:$_BUILD_ID' # Use $_BUILD_ID for final images list
 options: # Added to specify logging behavior
   logging: CLOUD_LOGGING_ONLY # Directs logs to Cloud Logging
