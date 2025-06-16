@@ -1,0 +1,28 @@
+# backend/cloudbuild.yaml
+steps:
+# 1. Build the Docker image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/gen-lang-client-0960260048/todo-backend:$COMMIT_SHA', '.']
+  dir: '.' # Ensure context is the backend directory
+
+# 2. Push the Docker image to Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/gen-lang-client-0960260048/todo-backend:$COMMIT_SHA']
+
+# 3. Deploy the new image to Cloud Run
+- name: 'gcr.io/cloud-builders/gcloud'
+  args:
+  - 'run'
+  - 'deploy'
+  - 'todo-backend'
+  - '--image'
+  - 'gcr.io/gen-lang-client-0960260048/todo-backend:$COMMIT_SHA'
+  - '--region'
+  - 'us-central1' # Your specified region
+  - '--platform'
+  - 'managed'
+  - '--allow-unauthenticated'
+  - '--update-env-vars' # Added to update environment variables
+  waitFor: ['-'] # Wait for all previous steps
+images:
+- 'gcr.io/gen-lang-client-0960260048/todo-backend:$COMMIT_SHA'
