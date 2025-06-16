@@ -81,7 +81,7 @@
 
         if (!text || text.trim() === '') {
             // Return 400 Bad Request if text is missing or empty
-            return res.status(400).json({ message: 'Sorry text cannot be empty.bye' });
+            return res.status(400).json({ message: 'Sorry text cannot be empty.bye hi' });
         }
 
         // Create a new todo object with a unique ID, text, and completed status
